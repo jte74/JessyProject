@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "type": "secrets"
+    },
+    "sqlite1": {
+      "type": "sqlite",
+      "connectionId": "JessyProject",
+      "dynamicId": null
+    },
+    "sqlite2": {
+      "type": "sqlite",
+      "connectionId": "ConnectionStrings:JessyProject",
+      "dynamicId": null
+    }
+  }
+}

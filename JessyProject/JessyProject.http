@@ -1,0 +1,6 @@
+@JessyProject_HostAddress = http://localhost:5294
+
+GET {{JessyProject_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
