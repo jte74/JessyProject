@@ -20,8 +20,7 @@ namespace JessyProject.Controllers
         public IEnumerable<ClassementIndividuel> GetClassementSeul()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\MSSQLLocalDB;Database=ClassementDB;Trusted_Connection=True;");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
 
 
             using (var context = new ClassementDbContext(optionsBuilder.Options))
@@ -124,8 +123,7 @@ namespace JessyProject.Controllers
         public IEnumerable<ClassementEquipe> GetClassementEquipe()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\MSSQLLocalDB;Database=ClassementDB;Trusted_Connection=True;");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
 
             var resultats = new List<ClassementEquipe>();
 
@@ -152,8 +150,7 @@ namespace JessyProject.Controllers
         private List<ClassementIndividuel> getClassementsIndividuels()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\MSSQLLocalDB;Database=ClassementDB;Trusted_Connection=True;");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
 
 
             using (var context = new ClassementDbContext(optionsBuilder.Options))

@@ -24,84 +24,61 @@ public partial class ClassementDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ClassementDB;Trusted_Connection=True;");
+        => optionsBuilder.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Bouygue>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tmp_ms_x__3214EC07E23E7070");
+            entity.HasKey(e => e.Id).HasName("Bouygues_pkey");
 
-            entity.Property(e => e.Client)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Date).HasColumnType("datetime");
-            entity.Property(e => e.NumContrat)
-                .HasMaxLength(50)
-                .HasColumnName("Num_contrat");
-            entity.Property(e => e.Produite)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Vendeur)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Equipe)
-                .HasMaxLength(255)
-                .IsFixedLength();
+            entity.ToTable("Bouygues", "c2e");
+
+            entity.HasIndex(e => e.Num_contrat, "Bouygues_Num_contrat_key").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Bouygues_Id_seq\"'::regclass)");
+            entity.Property(e => e.Client).HasMaxLength(255);
+            entity.Property(e => e.Date).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.Equipe).HasMaxLength(100);
+            entity.Property(e => e.Num_contrat).HasMaxLength(50);
+            entity.Property(e => e.Produite).HasMaxLength(50);
+            entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.Vendeur).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Engie>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tmp_ms_x__3214EC07F4414995");
+            entity.HasKey(e => e.Id).HasName("Engie_pkey");
 
-            entity.ToTable("Engie");
+            entity.ToTable("Engie", "c2e");
 
-            entity.Property(e => e.Client)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Date).HasColumnType("datetime");
-            entity.Property(e => e.NumContrat)
-                .HasMaxLength(50)
-                .HasColumnName("Num_contrat");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Type)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Vendeur)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Equipe)
-                .HasMaxLength(255)
-                .IsFixedLength();
+            entity.HasIndex(e => e.Num_contrat, "Engie_Num_contrat_key").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Engie_Id_seq\"'::regclass)");
+            entity.Property(e => e.Client).HasMaxLength(255);
+            entity.Property(e => e.Date).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.Equipe).HasMaxLength(100);
+            entity.Property(e => e.Num_contrat).HasMaxLength(50);
+            entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.Vendeur).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Ohm>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tmp_ms_x__3214EC07AAD91352");
+            entity.HasKey(e => e.Id).HasName("Ohm_pkey");
 
-            entity.ToTable("Ohm");
+            entity.ToTable("Ohm", "c2e");
 
-            entity.Property(e => e.Client)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Date).HasColumnType("datetime");
-            entity.Property(e => e.NumContrat)
-                .HasMaxLength(50)
-                .HasColumnName("Num_contrat");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Vendeur)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.Equipe)
-                .HasMaxLength(255)
-                .IsFixedLength();
+            entity.HasIndex(e => e.Num_contrat, "Ohm_Num_contrat_key").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Ohm_Id_seq\"'::regclass)");
+            entity.Property(e => e.Client).HasMaxLength(255);
+            entity.Property(e => e.Date).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.Equipe).HasMaxLength(100);
+            entity.Property(e => e.Num_contrat).HasMaxLength(50);
+            entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.Vendeur).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -7,9 +7,9 @@ public partial class Bouygue
 {
     public int Id { get; set; }
 
-    public DateTime? Date { get; set; }
+    public DateTime Date { get; set; }
 
-    public string? NumContrat { get; set; }
+    public string Num_contrat { get; set; } = null!;
 
     public string? Vendeur { get; set; }
 
@@ -18,5 +18,6 @@ public partial class Bouygue
     public string? Client { get; set; }
 
     public string? Produite { get; set; }
+
     public string? Equipe { get; set; }
 }
