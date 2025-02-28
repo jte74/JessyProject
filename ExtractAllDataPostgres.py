@@ -17,11 +17,12 @@ from dotenv import load_dotenv
 #     r"Trusted_Connection=yes;"
 # )
 
+
 conn_str = {
-    "host": "localhost",
-    "database": "ClassementDB",
-    "user": "postgres",
-    "password": "admin",
+    "host": "dpg-cv0gndaj1k6c73e8vo9g-a.frankfurt-postgres.render.com",
+    "database": "classement_db",
+    "user": "classement_db_user",
+    "password": "SRWO6rPlLyRgLRmp3tyKBHIC04GPZ0EY",
     "port": "5432"
 }
 
