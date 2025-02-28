@@ -1,52 +1,83 @@
-using JessyProject;
 using JessyProject.Data;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Configuration CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost",
-        builder => builder.WithOrigins("http://localhost:3000") // Permet l'acc�s � partir de localhost:3002 (votre frontend)
+    options.AddPolicy("AllowFrontend",
+        builder => builder
+            .WithOrigins(
+                "http://localhost:3000",    // Dev
+                "https://votre-front.prod"  // Prod
+            )
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .WithExposedHeaders("Content-Disposition"));
 });
 
+// Configuration Contrôleurs et Swagger
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddDbContext<ClassementDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<ClassementDbContext>(options =>
-    options.UseNpgsql("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe"));
+// Configuration base de données
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL")
+    ?? throw new InvalidOperationException("DATABASE_URL non configuré");
 
-builder.WebHost.ConfigureKestrel(serverOptions => {
-    serverOptions.ListenAnyIP(int.Parse(
-        Environment.GetEnvironmentVariable("PORT") ?? "8080"
+var databaseUri = new Uri(databaseUrl);
+var userInfo = databaseUri.UserInfo.Split(':');
+
+var connectionString = new NpgsqlConnectionStringBuilder
+{
+    Host = databaseUri.Host,
+    Port = databaseUri.Port,
+    Username = userInfo[0],
+    Password = userInfo[1],
+    Database = databaseUri.LocalPath.TrimStart('/'),
+    SslMode = SslMode.Require,
+    TrustServerCertificate = true,
+    Pooling = true,
+    MinPoolSize = 1,
+    MaxPoolSize = 20
+}.ToString();
+
+builder.Services.AddDbContext<ClassementDbContext>(options =>
+    options.UseNpgsql(
+        connectionString,
+        o => o.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
     ));
-});
+
+// Configuration du port pour Render
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://*:{port}");
 
 var app = builder.Build();
 
-app.UseCors("AllowLocalhost");
+// Middleware
+app.UseCors("AllowFrontend");
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
-
-
-app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseAuthorization();
-
 app.MapControllers();
+
+// Health check minimal
+app.MapGet("/health", () => Results.Ok(new { status = "Healthy", timestamp = DateTime.UtcNow }));
+
+// Appliquer les migrations au démarrage
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ClassementDbContext>();
+    await db.Database.MigrateAsync();
+}
 
 app.Run();

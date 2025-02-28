@@ -10,72 +10,33 @@ namespace JessyProject.Controllers
     public class ClassementController : ControllerBase
     {
         private readonly ILogger<ClassementController> _logger;
+        private readonly ClassementDbContext _context;
 
-        public ClassementController(ILogger<ClassementController> logger)
+        public ClassementController(ILogger<ClassementController> logger, ClassementDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet("GetClassement")]
         public IEnumerable<ClassementIndividuel> GetClassementSeul()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe");
+            var classementsEngie = _context.Engies.ToList();
+            var classementBouygues = _context.Bouygues.ToList();
+            var classementsOhm = _context.Ohms.ToList()
+                .Where(x => x.Status != null && (x.Status.StartsWith("Accepted") ||
+                                                 x.Status.StartsWith("effective") ||
+                                                 x.Status.StartsWith("sendToMkt")));
 
+            var all = new List<ClassementIndividuel>();
 
-            using (var context = new ClassementDbContext(optionsBuilder.Options))
+            foreach (var classement in classementBouygues)
             {
-                var classementsEngie = context.Engies.ToList();
-                var classementBouygues = context.Bouygues.ToList();
-                var classementsOhm = context.Ohms.ToList()
-                    .Where(x => x.Status != null && (x.Status.StartsWith("Accepted") ||
-                                                     x.Status.StartsWith("effective") ||
-                                                     x.Status.StartsWith("sendToMkt")));
+                var point = 0;
 
-                var all = new List<ClassementIndividuel>();
-
-                foreach (var classement in classementBouygues)
+                if (classement.Produite.StartsWith("Bbox"))
                 {
-                    var point = 0;
-
-                    if (classement.Produite.StartsWith("Bbox"))
-                    {
-                        point = 15;
-
-                        var contract = new ClassementIndividuel()
-                        {
-                            Nom = classement.Vendeur,
-                            Points = point
-                        };
-
-                        all.Add(contract);
-                    }
-                }
-
-                foreach (var classement in classementsEngie)
-                {
-
-                    var point = 0;
-
-                    if (classement.Type.TrimEnd() == "DUAL")
-                    {
-                        point = 10;
-                    }
-
-                    if (classement.Type.TrimEnd() == "ASSU")
-                    {
-                        point = 5;
-                    }
-
-                    if (classement.Type.TrimEnd() == "GAZ")
-                    {
-                        point = 5;
-                    }
-
-                    if (classement.Type.TrimEnd() == "ELEC")
-                    {
-                        point = 5;
-                    }
+                    point = 15;
 
                     var contract = new ClassementIndividuel()
                     {
@@ -85,63 +46,91 @@ namespace JessyProject.Controllers
 
                     all.Add(contract);
                 }
+            }
 
-                foreach (var classement in classementsOhm)
+            foreach (var classement in classementsEngie)
+            {
+
+                var point = 0;
+
+                if (classement.Type.TrimEnd() == "DUAL")
                 {
-                    if (classement.Vendeur.Contains("CHETIH") &&
-                        classement.Date > new DateTime(2025, 3, 1) &&
-                        (classement.Status.TrimEnd() == "signed" || classement.Status.TrimEnd() == "effective" || classement.Status.TrimEnd() == "sendToMkt"))
-                    {
-                        var contrat = new ClassementIndividuel()
-                        {
-                            Nom = classement.Vendeur,
-                            Points = 5,
-                            Equipe = classement.Equipe
-                        };
-
-                        all.Add(contrat);
-                    }
+                    point = 10;
                 }
 
-                var resultats = all
-                    .GroupBy(v => new { v.Nom }) // Grouper par Nom et Pr�nom
-                    .Select(g => new ClassementIndividuel()
-                    {
-                        Nom = g.Key.Nom.TrimEnd(),
-                        Points = g.Sum(v => v.Points),
-                        TotalContrats = g.Count()
-                    })
-                    .OrderByDescending(x => x.Points)
-                    .ToList();
+                if (classement.Type.TrimEnd() == "ASSU")
+                {
+                    point = 5;
+                }
 
+                if (classement.Type.TrimEnd() == "GAZ")
+                {
+                    point = 5;
+                }
 
-                return resultats;
+                if (classement.Type.TrimEnd() == "ELEC")
+                {
+                    point = 5;
+                }
+
+                var contract = new ClassementIndividuel()
+                {
+                    Nom = classement.Vendeur,
+                    Points = point
+                };
+
+                all.Add(contract);
             }
+
+            foreach (var classement in classementsOhm)
+            {
+                if (classement.Vendeur.Contains("CHETIH") &&
+                    classement.Date > new DateTime(2025, 3, 1) &&
+                    (classement.Status.TrimEnd() == "signed" || classement.Status.TrimEnd() == "effective" || classement.Status.TrimEnd() == "sendToMkt"))
+                {
+                    var contrat = new ClassementIndividuel()
+                    {
+                        Nom = classement.Vendeur,
+                        Points = 5,
+                        Equipe = classement.Equipe
+                    };
+
+                    all.Add(contrat);
+                }
+            }
+
+            var resultats = all
+                .GroupBy(v => new { v.Nom }) // Grouper par Nom et Pr�nom
+                .Select(g => new ClassementIndividuel()
+                {
+                    Nom = g.Key.Nom.TrimEnd(),
+                    Points = g.Sum(v => v.Points),
+                    TotalContrats = g.Count()
+                })
+                .OrderByDescending(x => x.Points)
+                .ToList();
+
+
+            return resultats;
         }
 
         [HttpGet("GetClassementEquipe")]
         public IEnumerable<ClassementEquipe> GetClassementEquipe()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe");
-
             var resultats = new List<ClassementEquipe>();
 
             var classementsIndividuel = getClassementsIndividuels();
 
-            using (var context = new ClassementDbContext(optionsBuilder.Options))
+            resultats = classementsIndividuel
+            .Where(v => v.Equipe != null) // Optionnel : filtre les �l�ments sans �quipe
+            .GroupBy(individu => individu.Equipe)
+            .Select(groupe => new ClassementEquipe
             {
-                    resultats = classementsIndividuel
-                    .Where(v => v.Equipe != null) // Optionnel : filtre les �l�ments sans �quipe
-                    .GroupBy(individu => individu.Equipe)
-                    .Select(groupe => new ClassementEquipe
-                    {
-                        Equipe = groupe.Key, // Le nom de l'�quipe vient de la cl� de regroupement
-                        Points = groupe.Sum(individu => individu.Points) // Somme des points
-                    })
-                    .OrderByDescending(e => e.Points) // Tri par points d�croissants
-                    .ToList();
-            }
+                Equipe = groupe.Key, // Le nom de l'�quipe vient de la cl� de regroupement
+                Points = groupe.Sum(individu => individu.Points) // Somme des points
+            })
+            .OrderByDescending(e => e.Points) // Tri par points d�croissants
+            .ToList();
 
             return resultats;
         }
@@ -149,64 +138,22 @@ namespace JessyProject.Controllers
 
         private List<ClassementIndividuel> getClassementsIndividuels()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe");
+            var classementsEngie = _context.Engies.ToList();
+            var classementBouygues = _context.Bouygues.ToList();
+            var classementsOhm = _context.Ohms.ToList()
+                .Where(x => x.Status != null && (x.Status.StartsWith("Accepted") ||
+                                                 x.Status.StartsWith("effective") ||
+                                                 x.Status.StartsWith("sendToMkt")));
 
+            var all = new List<ClassementIndividuel>();
 
-            using (var context = new ClassementDbContext(optionsBuilder.Options))
+            foreach (var classement in classementBouygues)
             {
-                var classementsEngie = context.Engies.ToList();
-                var classementBouygues = context.Bouygues.ToList();
-                var classementsOhm = context.Ohms.ToList()
-                    .Where(x => x.Status != null && (x.Status.StartsWith("Accepted") ||
-                                                     x.Status.StartsWith("effective") ||
-                                                     x.Status.StartsWith("sendToMkt")));
+                var point = 0;
 
-                var all = new List<ClassementIndividuel>();
-
-                foreach (var classement in classementBouygues)
+                if (classement.Produite.StartsWith("Bbox"))
                 {
-                    var point = 0;
-
-                    if (classement.Produite.StartsWith("Bbox"))
-                    {
-                        point = 15;
-
-                        var contract = new ClassementIndividuel()
-                        {
-                            Nom = classement.Vendeur,
-                            Points = point,
-                            Equipe = classement.Equipe
-                        };
-
-                        all.Add(contract);
-                    }
-                }
-
-                foreach (var classement in classementsEngie)
-                {
-
-                    var point = 0;
-
-                    if (classement.Type.TrimEnd() == "DUAL")
-                    {
-                        point = 10;
-                    }
-
-                    if (classement.Type.TrimEnd() == "ASSU")
-                    {
-                        point = 5;
-                    }
-
-                    if (classement.Type.TrimEnd() == "GAZ")
-                    {
-                        point = 5;
-                    }
-
-                    if (classement.Type.TrimEnd() == "ELEC")
-                    {
-                        point = 5;
-                    }
+                    point = 15;
 
                     var contract = new ClassementIndividuel()
                     {
@@ -217,39 +164,75 @@ namespace JessyProject.Controllers
 
                     all.Add(contract);
                 }
+            }
 
-                foreach (var classement in classementsOhm)
+            foreach (var classement in classementsEngie)
+            {
+
+                var point = 0;
+
+                if (classement.Type.TrimEnd() == "DUAL")
                 {
-                    if (classement.Vendeur.Contains("CHETIH") && 
-                        classement.Date > new DateTime(2025, 3, 1) && 
-                        (classement.Status.TrimEnd() == "signed" || classement.Status.TrimEnd() == "effective" || classement.Status.TrimEnd() == "sendToMkt"))
-                    {
-                        var contrat = new ClassementIndividuel()
-                        {
-                            Nom = classement.Vendeur,
-                            Points = 5,
-                            Equipe = classement.Equipe
-                        };
-
-                        all.Add(contrat);
-                    }
+                    point = 10;
                 }
 
-                var resultats = all
-                    .GroupBy(v => new { v.Nom, v.Equipe }) // Grouper par Nom et Pr�nom
-                    .Select(g => new ClassementIndividuel()
-                    {
-                        Nom = g.Key.Nom.TrimEnd(),
-                        Points = g.Sum(v => v.Points),
-                        TotalContrats = g.Count(),
-                        Equipe = g.Key.Equipe
-                    })
-                    .OrderByDescending(x => x.Points)
-                    .ToList();
+                if (classement.Type.TrimEnd() == "ASSU")
+                {
+                    point = 5;
+                }
 
+                if (classement.Type.TrimEnd() == "GAZ")
+                {
+                    point = 5;
+                }
 
-                return resultats;
+                if (classement.Type.TrimEnd() == "ELEC")
+                {
+                    point = 5;
+                }
+
+                var contract = new ClassementIndividuel()
+                {
+                    Nom = classement.Vendeur,
+                    Points = point,
+                    Equipe = classement.Equipe
+                };
+
+                all.Add(contract);
             }
+
+            foreach (var classement in classementsOhm)
+            {
+                if (classement.Vendeur.Contains("CHETIH") &&
+                    classement.Date > new DateTime(2025, 3, 1) &&
+                    (classement.Status.TrimEnd() == "signed" || classement.Status.TrimEnd() == "effective" || classement.Status.TrimEnd() == "sendToMkt"))
+                {
+                    var contrat = new ClassementIndividuel()
+                    {
+                        Nom = classement.Vendeur,
+                        Points = 5,
+                        Equipe = classement.Equipe
+                    };
+
+                    all.Add(contrat);
+                }
+            }
+
+            var resultats = all
+                .GroupBy(v => new { v.Nom, v.Equipe }) // Grouper par Nom et Pr�nom
+                .Select(g => new ClassementIndividuel()
+                {
+                    Nom = g.Key.Nom.TrimEnd(),
+                    Points = g.Sum(v => v.Points),
+                    TotalContrats = g.Count(),
+                    Equipe = g.Key.Equipe
+                })
+                .OrderByDescending(x => x.Points)
+                .ToList();
+
+
+            return resultats;
         }
     }
 }
+
