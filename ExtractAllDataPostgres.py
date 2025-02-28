@@ -23,7 +23,8 @@ conn_str = {
     "database": "classement_db",
     "user": "classement_db_user",
     "password": "SRWO6rPlLyRgLRmp3tyKBHIC04GPZ0EY",
-    "port": "5432"
+    "port": "5432",
+    "sslmode": "require"
 }
 
 
