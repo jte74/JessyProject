@@ -23,8 +23,7 @@ public partial class ClassementDbContext : DbContext
     public virtual DbSet<Ohm> Ohms { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
+        => optionsBuilder.UseNpgsql("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
