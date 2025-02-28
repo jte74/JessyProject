@@ -20,7 +20,7 @@ namespace JessyProject.Controllers
         public IEnumerable<ClassementIndividuel> GetClassementSeul()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
 
 
             using (var context = new ClassementDbContext(optionsBuilder.Options))
@@ -104,7 +104,7 @@ namespace JessyProject.Controllers
                 }
 
                 var resultats = all
-                    .GroupBy(v => new { v.Nom }) // Grouper par Nom et Prénom
+                    .GroupBy(v => new { v.Nom }) // Grouper par Nom et Prï¿½nom
                     .Select(g => new ClassementIndividuel()
                     {
                         Nom = g.Key.Nom.TrimEnd(),
@@ -123,7 +123,7 @@ namespace JessyProject.Controllers
         public IEnumerable<ClassementEquipe> GetClassementEquipe()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
 
             var resultats = new List<ClassementEquipe>();
 
@@ -132,14 +132,14 @@ namespace JessyProject.Controllers
             using (var context = new ClassementDbContext(optionsBuilder.Options))
             {
                     resultats = classementsIndividuel
-                    .Where(v => v.Equipe != null) // Optionnel : filtre les éléments sans équipe
+                    .Where(v => v.Equipe != null) // Optionnel : filtre les ï¿½lï¿½ments sans ï¿½quipe
                     .GroupBy(individu => individu.Equipe)
                     .Select(groupe => new ClassementEquipe
                     {
-                        Equipe = groupe.Key, // Le nom de l'équipe vient de la clé de regroupement
+                        Equipe = groupe.Key, // Le nom de l'ï¿½quipe vient de la clï¿½ de regroupement
                         Points = groupe.Sum(individu => individu.Points) // Somme des points
                     })
-                    .OrderByDescending(e => e.Points) // Tri par points décroissants
+                    .OrderByDescending(e => e.Points) // Tri par points dï¿½croissants
                     .ToList();
             }
 
@@ -150,7 +150,7 @@ namespace JessyProject.Controllers
         private List<ClassementIndividuel> getClassementsIndividuels()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
 
 
             using (var context = new ClassementDbContext(optionsBuilder.Options))
@@ -236,7 +236,7 @@ namespace JessyProject.Controllers
                 }
 
                 var resultats = all
-                    .GroupBy(v => new { v.Nom, v.Equipe }) // Grouper par Nom et Prénom
+                    .GroupBy(v => new { v.Nom, v.Equipe }) // Grouper par Nom et Prï¿½nom
                     .Select(g => new ClassementIndividuel()
                     {
                         Nom = g.Key.Nom.TrimEnd(),
