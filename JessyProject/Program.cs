@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
-        builder => builder.WithOrigins("http://localhost:3000") // Permet l'accès à partir de localhost:3002 (votre frontend)
+        builder => builder.WithOrigins("http://localhost:3000") // Permet l'accï¿½s ï¿½ partir de localhost:3002 (votre frontend)
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
@@ -19,9 +19,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddDbContext<ClassementDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<ClassementDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreConnection")));
 
+builder.WebHost.ConfigureKestrel(serverOptions => {
+    serverOptions.ListenAnyIP(int.Parse(
+        Environment.GetEnvironmentVariable("PORT") ?? "8080"
+    ));
+});
 
 var app = builder.Build();
 

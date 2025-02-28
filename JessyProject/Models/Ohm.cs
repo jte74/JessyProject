@@ -7,9 +7,9 @@ public partial class Ohm
 {
     public int Id { get; set; }
 
-    public DateTime? Date { get; set; }
+    public DateTime Date { get; set; }
 
-    public string? NumContrat { get; set; }
+    public string Num_contrat { get; set; } = null!;
 
     public string? Vendeur { get; set; }
 
