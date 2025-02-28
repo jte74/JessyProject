@@ -3,6 +3,7 @@ services:
     name: classement-api
     runtime: docker
     plan: free
+    region: frankfurt
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
@@ -13,6 +14,7 @@ services:
 
   - type: cron
     name: update-data
+    region: frankfurt
     runtime: python
     schedule: "*/30 * * * *"
     buildCommand: pip install -r requirements.txt
@@ -25,4 +27,5 @@ services:
 
 databases:
   - name: classement-db
+    region: frankfurt
     plan: free
