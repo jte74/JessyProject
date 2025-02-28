@@ -20,7 +20,7 @@ namespace JessyProject.Controllers
         public IEnumerable<ClassementIndividuel> GetClassementSeul()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe"));
 
 
             using (var context = new ClassementDbContext(optionsBuilder.Options))
@@ -123,7 +123,7 @@ namespace JessyProject.Controllers
         public IEnumerable<ClassementEquipe> GetClassementEquipe()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe"));
 
             var resultats = new List<ClassementEquipe>();
 
@@ -150,7 +150,7 @@ namespace JessyProject.Controllers
         private List<ClassementIndividuel> getClassementsIndividuels()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClassementDbContext>();
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("postgresql://classement_db_5uxe_user:TwsMEpVPtpK3l3bfawZuMg39uvnddw6s@dpg-cv0sc5tsvqrc738v8s60-a/classement_db_5uxe"));
 
 
             using (var context = new ClassementDbContext(optionsBuilder.Options))

@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddDbContext<ClassementDbContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<ClassementDbContext>(options =>
-    options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("PostgreConnection")));
+    options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL")));
 
 builder.WebHost.ConfigureKestrel(serverOptions => {
     serverOptions.ListenAnyIP(int.Parse(
