@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: jessy-api
+    runtime: docker
+    env: docker
+    plan: free
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: classement-db
+          property: connectionString
+    buildCommand: docker build -t jessy-app .
+    startCommand: dotnet JessyProject.dll
+
+databases:
+  - name: classement-db
+    databaseName: classementdb
+    user: postgres
+    plan: free
+    engine: postgres
+    version: 14
+
+cronJobs:
+  - name: data-updater
+    schedule: "*/30 * * * *"
+    buildCommand: pip install -r requirements.txt
+    runCommand: python script.py
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: classement-db
+          property: connectionString
+      - key: WEBSITE_USER
+        sync: false
+      - key: WEBSITE_PASSWORD
+        sync: false
