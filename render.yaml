@@ -14,11 +14,8 @@ services:
 
   - type: cron
     name: update-data
-<<<<<<< HEAD
-=======
     region: frankfurt
     runtime: python
->>>>>>> b6d08162df3460a89fdbdafd27f62597d5a4eb8f
     schedule: "*/30 * * * *"
     buildCommand: |
       pip install --no-cache-dir --force-reinstall -r requirements.txt
