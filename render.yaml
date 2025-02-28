@@ -13,6 +13,7 @@ services:
 
   - type: cron
     name: update-data
+    runtime: python
     schedule: "*/30 * * * *"
     buildCommand: pip install -r requirements.txt
     startCommand: python ExtractAllDataPostgres.py
