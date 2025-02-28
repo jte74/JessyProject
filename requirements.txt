@@ -1,12 +1,7 @@
 requests==2.31.0
 beautifulsoup4==4.12.2
 python-dotenv==1.0.0
-<<<<<<< HEAD
 numpy==1.23.5
 pandas==1.5.3
 openpyxl==3.0.10
 psycopg2-binary==2.9.6
-=======
-openpyxl>=3.0.0
-
->>>>>>> b6d08162df3460a89fdbdafd27f62597d5a4eb8f
