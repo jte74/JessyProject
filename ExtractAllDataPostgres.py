@@ -8,6 +8,8 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import execute_batch
 from dotenv import load_dotenv
+DATABASE_URL = os.getenv('DATABASE_URL')
+
 
 # Configuration de la connexion SQL Server
 # conn_str = (
@@ -17,15 +19,23 @@ from dotenv import load_dotenv
 #     r"Trusted_Connection=yes;"
 # )
 
-
 conn_str = {
-    "host": "dpg-cv0gndaj1k6c73e8vo9g-a.frankfurt-postgres.render.com",
+    "host": "dpg-cv0sc5tsvqrc738v8s60-a",
     "database": "classement_db",
     "user": "classement_db_user",
     "password": "SRWO6rPlLyRgLRmp3tyKBHIC04GPZ0EY",
     "port": "5432",
     "sslmode": "require"
 }
+
+# conn_str = {
+#     "host": "dpg-cv0gndaj1k6c73e8vo9g-a.frankfurt-postgres.render.com",
+#     "database": "classement_db",
+#     "user": "classement_db_user",
+#     "password": "SRWO6rPlLyRgLRmp3tyKBHIC04GPZ0EY",
+#     "port": "5432",
+#     "sslmode": "require"
+# }
 
 
 ENGIE_TEAM_MAPPING = {
@@ -157,7 +167,8 @@ def insert_data(df, table_name):
 
     conn = None  # Initialisation explicite
     try:
-        conn = psycopg2.connect(**conn_str, client_encoding='UTF8')
+        # conn = psycopg2.connect(**conn_str, client_encoding='UTF8')
+        conn = psycopg2.connect(dsn=os.getenv('DATABASE_URL'), sslmode='require', client_encoding='UTF8')
         cursor = conn.cursor()
         cursor.execute("SHOW client_encoding;")
         print("Encodage PostgreSQL:", cursor.fetchone())
