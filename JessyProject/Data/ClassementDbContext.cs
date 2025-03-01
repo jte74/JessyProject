@@ -33,6 +33,8 @@ public partial class ClassementDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("c2e");
+
         modelBuilder.Entity<Bouygue>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("Bouygues_pkey");
