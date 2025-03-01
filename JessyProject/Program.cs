@@ -11,7 +11,7 @@ builder.Services.AddCors(options =>
         builder => builder
             .WithOrigins(
                 "http://localhost:3000",    // Dev
-                "https://votre-front.prod"  // Prod
+                "https://www.bluedistrib-challenge.fr"  // Prod
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
