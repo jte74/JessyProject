@@ -56,8 +56,11 @@ builder.Services.AddDbContext<ClassementDbContext>(options =>
     ));
 
 // Configuration du port pour Render
+// var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+// builder.WebHost.UseUrls($"http://*:{port}");
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://*:{port}");
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}"); 
 
 var app = builder.Build();
 
@@ -82,7 +85,31 @@ app.MapGet("/health", () => Results.Ok(new { status = "Healthy", timestamp = Dat
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ClassementDbContext>();
-    await db.Database.MigrateAsync();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        // Vérifier si la migration a déjà été appliquée
+        if (!db.Database.GetAppliedMigrations().Any(m => m == "20250301104915_InitialCreate"))
+        {
+            logger.LogInformation("Application des migrations...");
+            await db.Database.MigrateAsync();
+        }
+        else
+        {
+            logger.LogInformation("Migrations déjà à jour");
+        }
+    }
+    catch (Npgsql.PostgresException ex) when (ex.SqlState == "42P07") // Gestion des tables existantes
+    {
+        logger.LogWarning("La table existe déjà - Mise à jour de l'historique des migrations");
+        
+        // Ajouter manuellement la migration dans l'historique
+        await db.Database.ExecuteSqlRawAsync(
+            @"INSERT INTO ""__EFMigrationsHistory"" (""MigrationId"", ""ProductVersion"") 
+            VALUES ('20250301104915_InitialCreate', '8.0.5') 
+            ON CONFLICT (""MigrationId"") DO NOTHING");
+    }
 }
 
 app.Run();
