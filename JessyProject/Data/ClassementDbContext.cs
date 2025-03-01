@@ -16,6 +16,15 @@ public partial class ClassementDbContext : DbContext
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
+        if (!options.IsConfigured)
+        {
+            // Configuration locale par défaut
+            options.UseNpgsql("Host=localhost;Database=ClassementDB;Username=postgres;Password=admin;Search Path=c2e");
+        }
+    }
+
     public virtual DbSet<Bouygue> Bouygues { get; set; }
 
     public virtual DbSet<Engie> Engies { get; set; }
