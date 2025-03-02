@@ -256,7 +256,7 @@ def process_engie_data():
             post_url="https://myofficebyc2e.com/ventes_engie.php",
             payload={
                 "recherche": "true",
-                "jj1": "01", "mm1": "01", "aa1": "2025",
+                "jj1": "01", "mm1": "03", "aa1": "2025",
                 "jj2": datetime.now().strftime("%d"),
                 "mm2": datetime.now().strftime("%m"),
                 "aa2": datetime.now().strftime("%Y"),
@@ -289,7 +289,7 @@ process_data(
     post_url="https://myofficebyc2e.com/ventes_ohm.php",
     payload={
         "recherche": "true",
-        "jj1": "01", "mm1": "01", "aa1": datetime.now().strftime("%Y"),
+        "jj1": "01", "mm1": "03", "aa1": datetime.now().strftime("%Y"),
         "jj2": datetime.now().strftime("%d"),
         "mm2": datetime.now().strftime("%m"),
         "aa2": datetime.now().strftime("%Y"),
@@ -308,7 +308,7 @@ process_data(
     post_url="https://myofficebyc2e.com/journal_bouygues.php",
     payload={
         "recherche": "true",
-        "jj1": "01", "mm1": "01", "aa1": datetime.now().strftime("%Y"),
+        "jj1": "01", "mm1": "03", "aa1": datetime.now().strftime("%Y"),
         "entite[]": ["2"],
         "statut[]": ["Active"]
     },
