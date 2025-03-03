@@ -309,8 +309,7 @@ process_data(
     payload={
         "recherche": "true",
         "jj1": "01", "mm1": "03", "aa1": datetime.now().strftime("%Y"),
-        "entite[]": ["2"],
-        "statut[]": ["Active","Vente validée"]
+        "entite[]": ["2"]
     },
     headers={
         "Content-Type": "application/x-www-form-urlencoded",
