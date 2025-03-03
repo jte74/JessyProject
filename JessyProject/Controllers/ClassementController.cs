@@ -99,7 +99,11 @@ namespace JessyProject.Controllers
             {
                 if (classement.Vendeur.Contains("CHETIH") &&
                     classement.Date > new DateTime(2025, 3, 1) &&
-                    (classement.Status.TrimEnd() == "signed" || classement.Status.TrimEnd() == "effective" || classement.Status.TrimEnd() == "sendToMkt"))
+                    (classement.Status.TrimEnd() == "signed" || 
+                    classement.Status.TrimEnd() == "effective" || 
+                    classement.Status.TrimEnd() == "sendToMkt" || 
+                    classement.Status.TrimEnd() == "waiting-prepay-vad" || 
+                    classement.Status.TrimEnd() == "waiting-prepay-gas-vad" ))
                 {
                     var contrat = new ClassementIndividuel()
                     {
@@ -135,14 +139,14 @@ namespace JessyProject.Controllers
             var classementsIndividuel = getClassementsIndividuels();
 
             resultats = classementsIndividuel
-            .Where(v => v.Equipe != null) // Optionnel : filtre les �l�ments sans �quipe
+            .Where(v => v.Equipe != null) // Optionnel : filtre les elements sans �quipe
             .GroupBy(individu => individu.Equipe)
             .Select(groupe => new ClassementEquipe
             {
-                Equipe = groupe.Key, // Le nom de l'�quipe vient de la cl� de regroupement
+                Equipe = groupe.Key, // Le nom de l'equipe vient de la cle de regroupement
                 Points = groupe.Sum(individu => individu.Points) // Somme des points
             })
-            .OrderByDescending(e => e.Points) // Tri par points d�croissants
+            .OrderByDescending(e => e.Points) // Tri par points decroissants
             .ToList();
 
             return resultats;
@@ -164,7 +168,7 @@ namespace JessyProject.Controllers
             {
                 var point = 0;
 
-                if (classement.Produite.StartsWith("Bbox"))
+                if (classement.Produite.StartsWith("Bbox") && (classement.Status.StartsWith("Active") || classement.Status.StartsWith("Vente validée")))
                 {
                     point = 15;
 
@@ -177,7 +181,23 @@ namespace JessyProject.Controllers
 
                     all.Add(contract);
                 }
+
+                if (classement.Produite.StartsWith("Forfait-Bouygues") && (classement.Status.StartsWith("Active") || classement.Status.StartsWith("Vente validée")))
+                {
+                    point = 5;
+
+                    var contract = new ClassementIndividuel()
+                    {
+                        Nom = classement.Vendeur,
+                        Points = point,
+                        Equipe = equipe
+                    };
+
+                    all.Add(contract);
+                }
             }
+
+            
 
             foreach (var classement in classementsEngie)
             {
