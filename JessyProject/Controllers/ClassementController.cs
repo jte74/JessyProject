@@ -95,9 +95,12 @@ namespace JessyProject.Controllers
                 all.Add(contract);
             }
 
+            var dateReference = new DateTime(2025, 3, 3, 0, 0, 0, DateTimeKind.Utc);
             foreach (var classement in classementsOhm)
             {
-                if (classement.Vendeur.Contains("CHETIH") &&
+                var test = classement.Date.ToUniversalTime();
+
+                if (classement.Vendeur.Contains("CHETIH") && (test.Year == 2025 && test.Month >= 3) &&
                     (classement.Status.TrimEnd() == "signed" || 
                     classement.Status.TrimEnd() == "effective" || 
                     classement.Status.TrimEnd() == "sendToMkt" || 
@@ -234,7 +237,9 @@ namespace JessyProject.Controllers
 
             foreach (var classement in classementsOhm)
             {
-                if (classement.Vendeur.Contains("CHETIH") && classement.Date.Year == 2025 && classement.Date.Month >= 3 &&
+                var test = classement.Date.ToUniversalTime();
+
+                if (classement.Vendeur.Contains("CHETIH") && (test.Year == 2025 && test.Month >= 3) &&
                     (classement.Status.TrimEnd() == "signed" ||
                      classement.Status.TrimEnd() == "effective" ||
                      classement.Status.TrimEnd() == "sendToMkt" ||
