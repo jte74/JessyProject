@@ -97,7 +97,12 @@ namespace JessyProject.Controllers
 
             foreach (var classement in classementsOhm)
             {
-                if (classement.Vendeur.Contains("CHETIH"))
+                if (classement.Vendeur.Contains("CHETIH") &&
+                    (classement.Status.TrimEnd() == "signed" || 
+                    classement.Status.TrimEnd() == "effective" || 
+                    classement.Status.TrimEnd() == "sendToMkt" || 
+                    classement.Status.TrimEnd() == "waiting-prepay-vad" || 
+                    classement.Status.TrimEnd() == "waiting-prepay-gas-vad" ))
                 {
                     var contrat = new ClassementIndividuel()
                     {
