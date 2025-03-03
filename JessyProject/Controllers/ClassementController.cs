@@ -98,7 +98,7 @@ namespace JessyProject.Controllers
             foreach (var classement in classementsOhm)
             {
                 if (classement.Vendeur.Contains("CHETIH") &&
-                    classement.Date > new DateTime(2025, 3, 1) &&
+                    classement.Date >= new DateTime(2025, 3, 1) &&
                     (classement.Status.TrimEnd() == "signed" || 
                     classement.Status.TrimEnd() == "effective" || 
                     classement.Status.TrimEnd() == "sendToMkt" || 
@@ -236,9 +236,13 @@ namespace JessyProject.Controllers
 
             foreach (var classement in classementsOhm)
             {
-                if (classement.Vendeur.Contains("CHETIH") &&
-                    classement.Date > new DateTime(2025, 3, 1) &&
-                    (classement.Status.TrimEnd() == "signed" || classement.Status.TrimEnd() == "effective" || classement.Status.TrimEnd() == "sendToMkt"))
+                    if (classement.Vendeur.Contains("CHETIH") &&
+                    classement.Date >= new DateTime(2025, 3, 1) &&
+                    (classement.Status.TrimEnd() == "signed" || 
+                    classement.Status.TrimEnd() == "effective" || 
+                    classement.Status.TrimEnd() == "sendToMkt" || 
+                    classement.Status.TrimEnd() == "waiting-prepay-vad" || 
+                    classement.Status.TrimEnd() == "waiting-prepay-gas-vad" ))
                 {
                     var contrat = new ClassementIndividuel()
                     {
