@@ -107,8 +107,7 @@ namespace JessyProject.Controllers
                     var contrat = new ClassementIndividuel()
                     {
                         Nom = classement.Vendeur,
-                        Points = 5,
-                        Equipe = classement.Equipe
+                        Points = 5
                     };
 
                     all.Add(contrat);
