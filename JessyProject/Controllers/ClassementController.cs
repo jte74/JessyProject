@@ -97,7 +97,7 @@ namespace JessyProject.Controllers
 
             foreach (var classement in classementsOhm)
             {
-                if (classement.Vendeur.Contains("CHETIH") && classement.Date.Year == 2025 && classement.Date.Month >= 3)
+                if (classement.Vendeur.Contains("CHETIH"))
                 {
                     var contrat = new ClassementIndividuel()
                     {
