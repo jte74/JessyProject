@@ -190,7 +190,7 @@ namespace JessyProject.Controllers
                     {
                         Nom = classement.Vendeur,
                         Points = point,
-                        Equipe = equipe
+                        Equipe = classement.Equipe
                     };
 
                     all.Add(contract);
