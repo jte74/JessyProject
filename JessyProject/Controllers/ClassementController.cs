@@ -34,9 +34,22 @@ namespace JessyProject.Controllers
             {
                 var point = 0;
 
-                if (classement.Produite.StartsWith("Bbox"))
+                if (classement.Produite.StartsWith("Bbox") && (classement.Status.StartsWith("Active") || classement.Status.StartsWith("Vente validée")))
                 {
                     point = 15;
+
+                    var contract = new ClassementIndividuel()
+                    {
+                        Nom = classement.Vendeur,
+                        Points = point
+                    };
+
+                    all.Add(contract);
+                }
+
+                if (classement.Produite.StartsWith("Forfait-Bouygues") && (classement.Status.StartsWith("Active") || classement.Status.StartsWith("Vente validée")))
+                {
+                    point = 5;
 
                     var contract = new ClassementIndividuel()
                     {
