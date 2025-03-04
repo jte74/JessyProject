@@ -26,6 +26,8 @@ namespace JessyProject.Controllers
             var classementsOhm = _context.Ohms.ToList()
                 .Where(x => x.Status != null && (x.Status.StartsWith("Accepted") ||
                                                  x.Status.StartsWith("effective") ||
+                                                 x.Status.StartsWith("waiting-prepay-vad") ||
+                                                 x.Status.StartsWith("waiting-prepay-gas-vad") ||
                                                  x.Status.StartsWith("sendToMkt")));
 
             var all = new List<ClassementIndividuel>();
@@ -98,23 +100,28 @@ namespace JessyProject.Controllers
             foreach (var classement in classementsOhm)
             {
                 DateTime dbDateUtc = classement.Date.ToUniversalTime();
-                DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") && dbDateUtc >= comparisonDateUtc &&
-                    (classement.Status.TrimEnd() == "signed" ||
-                     classement.Status.TrimEnd() == "effective" ||
-                     classement.Status.TrimEnd() == "sendToMkt" ||
-                     classement.Status.TrimEnd() == "waiting-prepay-vad" ||
-                     classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
+                if (dbDateUtc.Month >= 3)
                 {
-                    var contrat = new ClassementIndividuel()
+                    if (dbDateUtc.Year == 2025)
                     {
-                        Nom = classement.Vendeur,
-                        Points = 5,
-                        Equipe = classement.Equipe
-                    };
+                        if (classement.Vendeur.Contains("CHETIH") &&
+                            (classement.Status.TrimEnd() == "signed" ||
+                             classement.Status.TrimEnd() == "effective" ||
+                             classement.Status.TrimEnd() == "sendToMkt" ||
+                             classement.Status.TrimEnd() == "waiting-prepay-vad" ||
+                             classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
+                        {
+                            var contrat = new ClassementIndividuel()
+                            {
+                                Nom = classement.Vendeur,
+                                Points = 5,
+                                Equipe = classement.Equipe
+                            };
 
-                    all.Add(contrat);
+                            all.Add(contrat);
+                        }
+                    }
                 }
             }
 
@@ -239,23 +246,28 @@ namespace JessyProject.Controllers
             foreach (var classement in classementsOhm)
             {
                 DateTime dbDateUtc = classement.Date.ToUniversalTime();
-                DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") && dbDateUtc >= comparisonDateUtc &&
-                    (classement.Status.TrimEnd() == "signed" ||
-                     classement.Status.TrimEnd() == "effective" ||
-                     classement.Status.TrimEnd() == "sendToMkt" ||
-                     classement.Status.TrimEnd() == "waiting-prepay-vad" ||
-                     classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
+                if (dbDateUtc.Month >= 3)
                 {
-                    var contrat = new ClassementIndividuel()
+                    if (dbDateUtc.Year == 2025)
                     {
-                        Nom = classement.Vendeur,
-                        Points = 5,
-                        Equipe = classement.Equipe
-                    };
+                        if (classement.Vendeur.Contains("CHETIH") &&
+                            (classement.Status.TrimEnd() == "signed" ||
+                             classement.Status.TrimEnd() == "effective" ||
+                             classement.Status.TrimEnd() == "sendToMkt" ||
+                             classement.Status.TrimEnd() == "waiting-prepay-vad" ||
+                             classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
+                        {
+                            var contrat = new ClassementIndividuel()
+                            {
+                                Nom = classement.Vendeur,
+                                Points = 5,
+                                Equipe = classement.Equipe
+                            };
 
-                    all.Add(contrat);
+                            all.Add(contrat);
+                        }
+                    }
                 }
             }
 
