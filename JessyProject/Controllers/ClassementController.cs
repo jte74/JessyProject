@@ -95,7 +95,6 @@ namespace JessyProject.Controllers
                 all.Add(contract);
             }
 
-            var dateReference = new DateTime(2025, 3, 3, 0, 0, 0, DateTimeKind.Utc);
             foreach (var classement in classementsOhm)
             {
                 DateTime dbDateUtc = classement.Date.ToUniversalTime();
@@ -111,7 +110,8 @@ namespace JessyProject.Controllers
                     var contrat = new ClassementIndividuel()
                     {
                         Nom = classement.Vendeur,
-                        Points = 5
+                        Points = 5,
+                        Equipe = classement.Equipe
                     };
 
                     all.Add(contrat);
@@ -153,6 +153,7 @@ namespace JessyProject.Controllers
 
             return resultats;
         }
+
 
         private List<ClassementIndividuel> getClassementsIndividuels()
         {
@@ -198,6 +199,8 @@ namespace JessyProject.Controllers
                 }
             }
 
+
+
             foreach (var classement in classementsEngie)
             {
 
@@ -235,8 +238,6 @@ namespace JessyProject.Controllers
 
             foreach (var classement in classementsOhm)
             {
-                classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
-
                 DateTime dbDateUtc = classement.Date.ToUniversalTime();
                 DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -275,4 +276,3 @@ namespace JessyProject.Controllers
         }
     }
 }
-
