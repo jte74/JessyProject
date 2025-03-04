@@ -102,11 +102,11 @@ namespace JessyProject.Controllers
                 DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
                 if (classement.Vendeur.Contains("CHETIH") && dbDateUtc >= comparisonDateUtc &&
-                    (classement.Status.TrimEnd() == "signed" || 
-                     classement.Status.TrimEnd() == "effective" || 
-                     classement.Status.TrimEnd() == "sendToMkt" || 
-                     classement.Status.TrimEnd() == "waiting-prepay-vad" || 
-                     classement.Status.TrimEnd() == "waiting-prepay-gas-vad" ))
+                    (classement.Status.TrimEnd() == "signed" ||
+                     classement.Status.TrimEnd() == "effective" ||
+                     classement.Status.TrimEnd() == "sendToMkt" ||
+                     classement.Status.TrimEnd() == "waiting-prepay-vad" ||
+                     classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
                 {
                     var contrat = new ClassementIndividuel()
                     {
