@@ -98,25 +98,24 @@ namespace JessyProject.Controllers
             var dateReference = new DateTime(2025, 3, 3, 0, 0, 0, DateTimeKind.Utc);
             foreach (var classement in classementsOhm)
             {
-       classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
+                DateTime dbDateUtc = classement.Date.ToUniversalTime();
+                DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
-       if (classement.Vendeur.Contains("CHETIH") &&
-           classement.Date >= new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc) &&
-           (classement.Status.TrimEnd() == "signed" ||
-            classement.Status.TrimEnd() == "effective" ||
-            classement.Status.TrimEnd() == "sendToMkt" ||
-            classement.Status.TrimEnd() == "waiting-prepay-vad" ||
-            classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
-       {
-           var contrat = new ClassementIndividuel()
-           {
-               Nom = classement.Vendeur,
-               Points = 5,
-               Equipe = classement.Equipe
-           };
+                if (classement.Vendeur.Contains("CHETIH") && dbDateUtc >= comparisonDateUtc &&
+                    (classement.Status.TrimEnd() == "signed" ||
+                     classement.Status.TrimEnd() == "effective" ||
+                     classement.Status.TrimEnd() == "sendToMkt" ||
+                     classement.Status.TrimEnd() == "waiting-prepay-vad" ||
+                     classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
+                {
+                    var contrat = new ClassementIndividuel()
+                    {
+                        Nom = classement.Vendeur,
+                        Points = 5
+                    };
 
-           all.Add(contrat);
-       }
+                    all.Add(contrat);
+                }
             }
 
             var resultats = all
@@ -154,7 +153,6 @@ namespace JessyProject.Controllers
 
             return resultats;
         }
-
 
         private List<ClassementIndividuel> getClassementsIndividuels()
         {
@@ -200,8 +198,6 @@ namespace JessyProject.Controllers
                 }
             }
 
-            
-
             foreach (var classement in classementsEngie)
             {
 
@@ -239,25 +235,27 @@ namespace JessyProject.Controllers
 
             foreach (var classement in classementsOhm)
             {
-       classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
+                classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
 
-       if (classement.Vendeur.Contains("CHETIH") &&
-           classement.Date >= new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc) &&
-           (classement.Status.TrimEnd() == "signed" ||
-            classement.Status.TrimEnd() == "effective" ||
-            classement.Status.TrimEnd() == "sendToMkt" ||
-            classement.Status.TrimEnd() == "waiting-prepay-vad" ||
-            classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
-       {
-           var contrat = new ClassementIndividuel()
-           {
-               Nom = classement.Vendeur,
-               Points = 5,
-               Equipe = classement.Equipe
-           };
+                DateTime dbDateUtc = classement.Date.ToUniversalTime();
+                DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
-           all.Add(contrat);
-       }
+                if (classement.Vendeur.Contains("CHETIH") && dbDateUtc >= comparisonDateUtc &&
+                    (classement.Status.TrimEnd() == "signed" ||
+                     classement.Status.TrimEnd() == "effective" ||
+                     classement.Status.TrimEnd() == "sendToMkt" ||
+                     classement.Status.TrimEnd() == "waiting-prepay-vad" ||
+                     classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
+                {
+                    var contrat = new ClassementIndividuel()
+                    {
+                        Nom = classement.Vendeur,
+                        Points = 5,
+                        Equipe = classement.Equipe
+                    };
+
+                    all.Add(contrat);
+                }
             }
 
             var resultats = all
