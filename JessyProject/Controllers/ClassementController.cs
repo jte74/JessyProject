@@ -99,8 +99,9 @@ namespace JessyProject.Controllers
             foreach (var classement in classementsOhm)
             {
                 var test = classement.Date.ToUniversalTime();
+                var comparisonDate = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") && (test.Year == 2025 && test.Month >= 3) &&
+                if (classement.Vendeur.Contains("CHETIH") && (test >= comparisonDate) &&
                     (classement.Status.TrimEnd() == "signed" || 
                     classement.Status.TrimEnd() == "effective" || 
                     classement.Status.TrimEnd() == "sendToMkt" || 
@@ -238,8 +239,9 @@ namespace JessyProject.Controllers
             foreach (var classement in classementsOhm)
             {
                 var test = classement.Date.ToUniversalTime();
+                var comparisonDate = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") && (test.Year == 2025 && test.Month >= 3) &&
+                if (classement.Vendeur.Contains("CHETIH") && (test >= comparisonDate) &&
                     (classement.Status.TrimEnd() == "signed" ||
                      classement.Status.TrimEnd() == "effective" ||
                      classement.Status.TrimEnd() == "sendToMkt" ||
