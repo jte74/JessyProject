@@ -25,10 +25,12 @@ namespace JessyProject.Controllers
             var classementBouygues = _context.Bouygues.ToList();
             var classementsOhm = _context.Ohms.ToList()
                 .Where(x => x.Status != null && (x.Status.StartsWith("Accepted") ||
-                                                 x.Status.StartsWith("effective") ||
-                                                 x.Status.StartsWith("waiting-prepay-vad") ||
-                                                 x.Status.StartsWith("waiting-prepay-gas-vad") ||
-                                                 x.Status.StartsWith("sendToMkt")));
+                                                     x.Status.StartsWith("effective") ||
+                                                     x.Status.StartsWith("finalized") ||
+                                                     x.Status.StartsWith("waiting-prepay-vad") ||
+                                                     x.Status.StartsWith("waiting-prepay-gas-vad") ||
+                                                     x.Status.StartsWith("signed") ||
+                                                     x.Status.StartsWith("sendToMkt")));
 
             var all = new List<ClassementIndividuel>();
 
@@ -107,6 +109,8 @@ namespace JessyProject.Controllers
                     {
                         if (classement.Vendeur.Contains("CHETIH") &&
                             (classement.Status.TrimEnd() == "signed" ||
+                             classement.Status.TrimEnd() == "Accepted" ||
+                             classement.Status.TrimEnd() == "finalized" ||
                              classement.Status.TrimEnd() == "effective" ||
                              classement.Status.TrimEnd() == "sendToMkt" ||
                              classement.Status.TrimEnd() == "waiting-prepay-vad" ||
@@ -169,6 +173,10 @@ namespace JessyProject.Controllers
             var classementsOhm = _context.Ohms.ToList()
                 .Where(x => x.Status != null && (x.Status.StartsWith("Accepted") ||
                                                  x.Status.StartsWith("effective") ||
+                                                 x.Status.StartsWith("finalized") ||
+                                                 x.Status.StartsWith("waiting-prepay-vad") ||
+                                                 x.Status.StartsWith("waiting-prepay-gas-vad") ||
+                                                 x.Status.StartsWith("signed") ||
                                                  x.Status.StartsWith("sendToMkt")));
 
             var all = new List<ClassementIndividuel>();
@@ -253,6 +261,8 @@ namespace JessyProject.Controllers
                     {
                         if (classement.Vendeur.Contains("CHETIH") &&
                             (classement.Status.TrimEnd() == "signed" ||
+                             classement.Status.TrimEnd() == "Accepted" ||
+                             classement.Status.TrimEnd() == "finalized" ||
                              classement.Status.TrimEnd() == "effective" ||
                              classement.Status.TrimEnd() == "sendToMkt" ||
                              classement.Status.TrimEnd() == "waiting-prepay-vad" ||
