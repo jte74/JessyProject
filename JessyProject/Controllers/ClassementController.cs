@@ -98,10 +98,10 @@ namespace JessyProject.Controllers
             var dateReference = new DateTime(2025, 3, 3, 0, 0, 0, DateTimeKind.Utc);
             foreach (var classement in classementsOhm)
             {
-                classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
+                DateTime dbDateUtc = classement.Date.ToUniversalTime();
+                DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") &&
-                    classement.Date >= new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc) &&
+                if (classement.Vendeur.Contains("CHETIH") && dbDateUtc >= comparisonDateUtc &&
                     (classement.Status.TrimEnd() == "signed" || 
                      classement.Status.TrimEnd() == "effective" || 
                      classement.Status.TrimEnd() == "sendToMkt" || 
@@ -154,7 +154,6 @@ namespace JessyProject.Controllers
             return resultats;
         }
 
-
         private List<ClassementIndividuel> getClassementsIndividuels()
         {
             var classementsEngie = _context.Engies.ToList();
@@ -199,8 +198,6 @@ namespace JessyProject.Controllers
                 }
             }
 
-            
-
             foreach (var classement in classementsEngie)
             {
 
@@ -240,8 +237,10 @@ namespace JessyProject.Controllers
             {
                 classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") &&
-                    classement.Date >= new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc) &&
+                DateTime dbDateUtc = classement.Date.ToUniversalTime();
+                DateTime comparisonDateUtc = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc);
+
+                if (classement.Vendeur.Contains("CHETIH") && dbDateUtc >= comparisonDateUtc &&
                     (classement.Status.TrimEnd() == "signed" ||
                      classement.Status.TrimEnd() == "effective" ||
                      classement.Status.TrimEnd() == "sendToMkt" ||
