@@ -98,14 +98,15 @@ namespace JessyProject.Controllers
             var dateReference = new DateTime(2025, 3, 3, 0, 0, 0, DateTimeKind.Utc);
             foreach (var classement in classementsOhm)
             {
-                var test = classement.Date.ToUniversalTime();
+                classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") && (test.Year == 2025 && test.Month >= 3) &&
+                if (classement.Vendeur.Contains("CHETIH") &&
+                    classement.Date >= new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc) &&
                     (classement.Status.TrimEnd() == "signed" || 
-                    classement.Status.TrimEnd() == "effective" || 
-                    classement.Status.TrimEnd() == "sendToMkt" || 
-                    classement.Status.TrimEnd() == "waiting-prepay-vad" || 
-                    classement.Status.TrimEnd() == "waiting-prepay-gas-vad" ))
+                     classement.Status.TrimEnd() == "effective" || 
+                     classement.Status.TrimEnd() == "sendToMkt" || 
+                     classement.Status.TrimEnd() == "waiting-prepay-vad" || 
+                     classement.Status.TrimEnd() == "waiting-prepay-gas-vad" ))
                 {
                     var contrat = new ClassementIndividuel()
                     {
@@ -237,9 +238,10 @@ namespace JessyProject.Controllers
 
             foreach (var classement in classementsOhm)
             {
-                var test = classement.Date.ToUniversalTime();
+                classement.Date = DateTime.SpecifyKind(classement.Date, DateTimeKind.Utc);
 
-                if (classement.Vendeur.Contains("CHETIH") && (test.Year == 2025 && test.Month >= 3) &&
+                if (classement.Vendeur.Contains("CHETIH") &&
+                    classement.Date >= new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Utc) &&
                     (classement.Status.TrimEnd() == "signed" ||
                      classement.Status.TrimEnd() == "effective" ||
                      classement.Status.TrimEnd() == "sendToMkt" ||
