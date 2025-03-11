@@ -180,6 +180,19 @@ def insert_data(df, table_name):
             cols.append('Produite')
         
         # Requête UPSERT
+        # query = sql.SQL("""
+        #     INSERT INTO c2e.{table} ({columns})
+        #     VALUES ({values})
+        #     ON CONFLICT ({conflict}) DO NOTHING
+        # """).format(
+        #     table=sql.Identifier(table_name),
+        #     columns=sql.SQL(', ').join(map(sql.Identifier, cols)),
+        #     values=sql.SQL(', ').join([sql.Placeholder()] * len(cols)),
+        #     conflict=sql.Identifier('Num_contrat')
+        # )
+
+        conflict_columns = ['Num_contrat', 'Status']
+
         query = sql.SQL("""
             INSERT INTO c2e.{table} ({columns})
             VALUES ({values})
@@ -188,7 +201,7 @@ def insert_data(df, table_name):
             table=sql.Identifier(table_name),
             columns=sql.SQL(', ').join(map(sql.Identifier, cols)),
             values=sql.SQL(', ').join([sql.Placeholder()] * len(cols)),
-            conflict=sql.Identifier('Num_contrat')
+            conflict=sql.SQL(', ').join(map(sql.Identifier, conflict_columns))
         )
         
         # Conversion des données
