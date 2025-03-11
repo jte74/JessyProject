@@ -29,7 +29,6 @@ namespace JessyProject.Controllers
                                                      x.Status.StartsWith("finalized") ||
                                                      x.Status.StartsWith("waiting-prepay-vad") ||
                                                      x.Status.StartsWith("waiting-prepay-gas-vad") ||
-                                                     x.Status.StartsWith("signed") ||
                                                      x.Status.StartsWith("sendToMkt")));
 
             var all = new List<ClassementIndividuel>();
@@ -108,7 +107,6 @@ namespace JessyProject.Controllers
                     if (dbDateUtc.Year == 2025)
                     {
                         if (classement.Vendeur.Contains("CHETIH") &&
-                            (classement.Status.TrimEnd() == "signed" ||
                              classement.Status.TrimEnd() == "Accepted" ||
                              classement.Status.TrimEnd() == "finalized" ||
                              classement.Status.TrimEnd() == "effective" ||
@@ -116,14 +114,14 @@ namespace JessyProject.Controllers
                              classement.Status.TrimEnd() == "waiting-prepay-vad" ||
                              classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
                         {
-                            var contrat = new ClassementIndividuel()
-                            {
-                                Nom = classement.Vendeur,
-                                Points = 5,
-                                Equipe = classement.Equipe
-                            };
+                                var contrat = new ClassementIndividuel()
+                                {
+                                    Nom = classement.Vendeur,
+                                    Points = 5,
+                                    Equipe = classement.Equipe
+                                };
 
-                            all.Add(contrat);
+                                all.Add(contrat);
                         }
                     }
                 }
@@ -176,7 +174,6 @@ namespace JessyProject.Controllers
                                                  x.Status.StartsWith("finalized") ||
                                                  x.Status.StartsWith("waiting-prepay-vad") ||
                                                  x.Status.StartsWith("waiting-prepay-gas-vad") ||
-                                                 x.Status.StartsWith("signed") ||
                                                  x.Status.StartsWith("sendToMkt")));
 
             var all = new List<ClassementIndividuel>();
@@ -260,7 +257,6 @@ namespace JessyProject.Controllers
                     if (dbDateUtc.Year == 2025)
                     {
                         if (classement.Vendeur.Contains("CHETIH") &&
-                            (classement.Status.TrimEnd() == "signed" ||
                              classement.Status.TrimEnd() == "Accepted" ||
                              classement.Status.TrimEnd() == "finalized" ||
                              classement.Status.TrimEnd() == "effective" ||
