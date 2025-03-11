@@ -107,13 +107,14 @@ namespace JessyProject.Controllers
                     if (dbDateUtc.Year == 2025)
                     {
                         if (classement.Vendeur.Contains("CHETIH") &&
-                             classement.Status.TrimEnd() == "Accepted" ||
+                             (classement.Status.TrimEnd() == "Accepted" ||
                              classement.Status.TrimEnd() == "finalized" ||
                              classement.Status.TrimEnd() == "effective" ||
                              classement.Status.TrimEnd() == "sendToMkt" ||
                              classement.Status.TrimEnd() == "waiting-prepay-vad" ||
                              classement.Status.TrimEnd() == "waiting-prepay-gas-vad"))
                         {
+                          
                                 var contrat = new ClassementIndividuel()
                                 {
                                     Nom = classement.Vendeur,
@@ -257,7 +258,7 @@ namespace JessyProject.Controllers
                     if (dbDateUtc.Year == 2025)
                     {
                         if (classement.Vendeur.Contains("CHETIH") &&
-                             classement.Status.TrimEnd() == "Accepted" ||
+                             (classement.Status.TrimEnd() == "Accepted" ||
                              classement.Status.TrimEnd() == "finalized" ||
                              classement.Status.TrimEnd() == "effective" ||
                              classement.Status.TrimEnd() == "sendToMkt" ||
