@@ -193,7 +193,7 @@ def insert_data(df, table_name):
         # )
 
 
-        if table_name in ['Bouygues', 'Ohm']:
+        if table_name in ['Engie', 'Ohm']:
             # Conflit sur Num_contrat uniquement
             conflict_column = sql.Identifier('Num_contrat')
         else:
